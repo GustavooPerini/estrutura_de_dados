@@ -1,0 +1,16 @@
+5
+Banana Split
+12.50
+7
+Limao
+2
+10
+Cenoura
+3.50
+20
+Cebola
+2.50
+25
+Salsa
+1.20
+30
