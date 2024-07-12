@@ -39,8 +39,11 @@ void product_print(void *data){
 
 int compare_product_by_name(const void *data1, const void *data2){
 
-    Product *p1 = *((Product**)data1);
-    Product *p2 = *((Product**)data2);
+    /*Product *p1 = *((Product**)data1);
+    Product *p2 = *((Product**)data2);*/
+
+    Product *p1 = (Product*)data1;
+    Product *p2 = (Product*)data2;
 
     return strcmp(p1->name, p2->name);
 }

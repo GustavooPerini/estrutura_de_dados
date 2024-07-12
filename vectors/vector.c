@@ -71,8 +71,6 @@ int vector_find(Vector *v, data_type val, compare_func cmp){
 
     for(int i = 0; i < v->size; i++){
 
-        //data_type vec = vector_get(v, i)
-
        if(!cmp(val, vector_get(v, i))){
             return i;
        }
@@ -153,7 +151,7 @@ void vector_swap(Vector *v, int i, int j){
 
 void vector_sort(Vector *v, compare_func cmp){
 
-    /*for(int i = 0; i < v->size - 1; i++){
+    for(int i = 0; i < v->size - 1; i++){
         int trocas = 0;
 
         for(int j = 0; j < v->size - i - 1; j++){
@@ -167,15 +165,15 @@ void vector_sort(Vector *v, compare_func cmp){
         if(trocas == 0){
             break;
         }
-    }*/
+    }
 
-   qsort(v, v->size, sizeof(data_type), cmp); //FAZER ISSO AQUI FUNCIONAR
+   //qsort(v->data, v->size, sizeof(data_type), cmp);
 
 }
 
 
 //implementar o vector binary search
-//deixar a função de comparação funcionar com o qsort e as outras funções
+//deixar a função de comparação funcionar com o qsort e as outras funções (ver com o professor)
 
 
 void vector_destroy(Vector *v){
