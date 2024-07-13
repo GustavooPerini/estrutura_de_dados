@@ -172,7 +172,31 @@ void vector_sort(Vector *v, compare_func cmp){
 }
 
 
-//implementar o vector binary search
+int vector_binary_search(Vector *v, data_type val, compare_func cmp){
+
+    int left = 0;
+    int right = v->size - 1;
+
+    while(left <= right){
+
+        int mid = left + (right - left) / 2;
+        int search = cmp(val, vector_get(v, mid));
+
+        if(search == 0){
+            return mid;
+        }
+        else if(search > 0){
+            left = mid + 1;
+        }
+        else{
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+
 //deixar a função de comparação funcionar com o qsort e as outras funções (ver com o professor)
 
 

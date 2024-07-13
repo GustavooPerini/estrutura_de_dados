@@ -54,8 +54,12 @@ int main(){
             vector_remove(produtos, k);
         }
         else if(escolha == 3){
-            Product *p = product_constructor("abacate", 10.5, 20);
+            Product *p = product_constructor("manga", 10.5, 20);
             int index = vector_find(produtos, p, compare_product_by_name);
+
+            //a lista de itens precisa estar ordernada
+            //int index = vector_binary_search(produtos, p, compare_product_by_name);
+
             product_destructor(p);
 
             if(index >= 0){
@@ -67,7 +71,7 @@ int main(){
 
         }
         else if(escolha == 4){
-            Product *p = product_constructor("abacate", 10.5, 20);
+            Product *p = product_constructor("manga", 10.5, 20);
             vector_insert(produtos, 1, p);
         }
         else if(escolha == 5){

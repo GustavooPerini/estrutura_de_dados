@@ -21,6 +21,7 @@ void product_sell(Product *product, int quantity);
 void product_buy(Product *product, int quantity);
 
 float product_get_price_with_discount(Product *product);
+
 void product_print(void *data);
 
 void product_destructor(void *data);
