@@ -196,15 +196,17 @@ int vector_binary_search(Vector *v, data_type val, compare_func cmp){
     return -1;
 }
 
+void vector_pacial_destroy(Vector *v){
 
-//deixar a função de comparação funcionar com o qsort e as outras funções (ver com o professor)
-
+    free(v->data);
+    free(v);
+}
 
 void vector_destroy(Vector *v){
 
     for(int i = 0; i < v->size; i++){
 
-        v->delete(v->data[i]); 
+        v->delete(v->data[i]);  
     }
     free(v->data);
     free(v);

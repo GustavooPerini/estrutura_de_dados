@@ -24,6 +24,8 @@ void set_distacia_pai(Cidade *cidade, float distPai);
 
 void set_tag_pai(Cidade *cidade, int tagPai);
 
+void set_tag(Cidade *cidade, int tag);
+
 int compara_cidade_tag(const void *a, const void *b);
 
 void cidade_destroy(void *data);

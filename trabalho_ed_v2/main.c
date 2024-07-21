@@ -15,11 +15,16 @@ int main(){
     //gravando todas as cidades de entrada em um vetor
     for(int i = 0; i < n; i++){
         vector_push_back(cidades, cidade_construct());
+        set_tag(vector_get(cidades, i), i);
     }
 
     if(!strcmp(comando, "DFS")){
 
         busca_DFS(cidades, cidadeInicio, cidadeAlvo);
+    }
+    else if(!strcmp(comando, "BFS")){
+
+        busca_BFS(cidades, cidadeInicio, cidadeAlvo);
     }
 
     vector_destroy(cidades);

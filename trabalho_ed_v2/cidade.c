@@ -22,7 +22,9 @@ Cidade *cidade_construct(){
 
     Cidade *cidade = (Cidade*)malloc(sizeof(Cidade));
 
-    scanf("%d %s %f %f %d", &cidade->tag, cidade->nome, &cidade->coordX, &cidade->coordY, &cidade->numVizinhos);
+    scanf("%s %f %f %d", cidade->nome, &cidade->coordX, &cidade->coordY, &cidade->numVizinhos);
+
+    cidade->tag = -1;
 
     cidade->tagVizinhos = (int*)malloc(sizeof(int) * cidade->numVizinhos);
     cidade->distVizinhos = (float*)malloc(sizeof(float) * cidade->numVizinhos);
@@ -44,13 +46,13 @@ void printa_cidade(void *data){
 
         Cidade *cidade = (Cidade*)data;
 
-        printf("%d %s %.2f %.2f %d", cidade->tag, cidade->nome, cidade->coordX, cidade->coordY, cidade->numVizinhos);
+        /*printf("%d %s %.2f %.2f %d", cidade->tag, cidade->nome, cidade->coordX, cidade->coordY, cidade->numVizinhos);
 
         for(int i = 0; i < cidade->numVizinhos; i++){
             printf(" %d %.2f", cidade->tagVizinhos[i], cidade->distVizinhos[i]);
-        }
+        }*/
 
-        printf("\n");
+        printf("%s\n", cidade->nome);
     }
 }
 
@@ -80,7 +82,7 @@ int get_tag_pai(Cidade *cidade){
 }
 
 float get_dist_pai(Cidade *cidade){
-    return cidade->distPai; 
+    return cidade->distPai;
 }
 
 
@@ -91,6 +93,10 @@ void set_distacia_pai(Cidade *cidade, float distPai){
 
 void set_tag_pai(Cidade *cidade, int tagPai){
     cidade->tagPai = tagPai;
+}
+
+void set_tag(Cidade *cidade, int tag){
+    cidade->tag = tag;
 }
 
 

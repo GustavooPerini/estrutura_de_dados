@@ -57,6 +57,9 @@ Vector *vector_copy(Vector *v);
 // Remove todos os elementos de v
 void vector_clear(Vector *v);
 
+// Libera parte da memoria alocada para o vetor. Desaloca apenas a estrutura, ainda falta desalocar os itens.
+void vector_pacial_destroy(Vector *v);
+
 // Libera a memoria alocada para o vetor
 void vector_destroy(Vector *v);
 

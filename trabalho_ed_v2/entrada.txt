@@ -1,10 +1,12 @@
-DFS
-0 5
-7
-0 Vitoria 0 0 3 1 16 2 20 3 12
-1 Cariacica -16 0 3 0 16 7 10 8 50
-2 Serra 16 16 1 0 20
-3 VilaVelha 0 15 3 0 12 7 20 4 60
-4 Guarapari 10 25 3 3 60 5 50 6 70
-5 Anchieta 25 40 1 4 50
-6 Iconha 20 55 1 4 70
+BFS
+0 6
+9
+Vitoria 0 0 3 1 16 2 20 3 12
+Cariacica -16 0 3 0 16 7 10 8 50
+Serra 16 16 1 0 20
+VilaVelha 0 15 3 0 12 7 20 4 60
+Guarapari 10 25 3 3 60 5 50 6 70
+Anchieta 25 40 1 4 50
+Iconha 20 55 1 4 70
+Viana 17 20 2 1 10 3 20
+SantaLeopoldina 19 40 1 1 50
