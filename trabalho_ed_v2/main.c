@@ -20,7 +20,6 @@ int main(){
     if(!strcmp(comando, "DFS")){
 
         busca_DFS(cidades, cidadeInicio, cidadeAlvo);
-
     }
 
     vector_destroy(cidades);
