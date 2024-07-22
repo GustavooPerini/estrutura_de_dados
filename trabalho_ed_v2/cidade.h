@@ -20,11 +20,15 @@ int get_tag_pai(Cidade *cidade);
 
 float get_dist_pai(Cidade *cidade);
 
+float get_custo_origem(Cidade *cidade);
+
 void set_distacia_pai(Cidade *cidade, float distPai);
 
 void set_tag_pai(Cidade *cidade, int tagPai);
 
 void set_tag(Cidade *cidade, int tag);
+
+void set_custo_origem(Cidade *cidade, float custo);
 
 int compara_cidade_tag(const void *a, const void *b);
 

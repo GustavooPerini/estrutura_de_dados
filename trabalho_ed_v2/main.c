@@ -26,6 +26,10 @@ int main(){
 
         busca_BFS(cidades, cidadeInicio, cidadeAlvo);
     }
+    else if(!strcmp(comando, "UCS")){
+
+        busca_UCS(cidades, cidadeInicio, cidadeAlvo);
+    }
 
     vector_destroy(cidades);
 

@@ -5,18 +5,18 @@ typedef struct Heap Heap;
 
 Heap *heap_construct();
 
-void heap_push(Heap *heap, void *data, double priority);
+void heap_push(Heap *heap, void *data, float priority);
 
 int heap_empty(Heap *heap);
 
+int heap_size(Heap *heap);
+
 void *heap_max(Heap *heap);
 
-double heap_max_priority(Heap *heap);
+float heap_max_priority(Heap *heap);
 
 void *heap_pop(Heap *heap);
 
 void heap_destroy(Heap *heap);
-
-void heap_sort(void *array, int array_size, int item_size, double (*key_fn)(void *));
 
 #endif

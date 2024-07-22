@@ -15,6 +15,7 @@ struct cidade{
 
     int tagPai;
     float distPai;
+    float custoOrigem;
 };
 
 
@@ -35,6 +36,7 @@ Cidade *cidade_construct(){
 
     cidade->tagPai = -1;
     cidade->distPai = 0;
+    cidade->custoOrigem = 0;
 
     return cidade;
 }
@@ -86,7 +88,12 @@ float get_dist_pai(Cidade *cidade){
 }
 
 
-void set_distacia_pai(Cidade *cidade, float distPai){
+float get_custo_origem(Cidade *cidade){
+    return cidade->custoOrigem;
+}
+
+
+void set_distacia_pai(Cidade *cidade, float distPai){ 
     cidade->distPai = distPai;
 }
 
@@ -97,6 +104,11 @@ void set_tag_pai(Cidade *cidade, int tagPai){
 
 void set_tag(Cidade *cidade, int tag){
     cidade->tag = tag;
+}
+
+
+void set_custo_origem(Cidade *cidade, float custo){
+    cidade->custoOrigem += custo;
 }
 
 

@@ -9,7 +9,7 @@ const int HEAP_GROW_RATE = 2;
 typedef struct {
 
     void *data;
-    double priority;
+    float priority;
 }HeapNode;
 
 
@@ -38,7 +38,7 @@ void _heapify_up(Heap *heap, int idx){
        
         int parent = (idx - 1) / 2;
 
-        if(heap->nodes[idx].priority > heap->nodes[parent].priority){
+        if(heap->nodes[idx].priority < heap->nodes[parent].priority){
             _swap_nodes(heap, idx, parent);
             idx = parent;
         }
@@ -61,13 +61,13 @@ void _heapify_down(Heap *heap, int idx){
         int right_child = idx * 2 + 2;
 
         if((left_child < heap->size) &&
-           (heap->nodes[left_child].priority > heap->nodes[max].priority)){
+           (heap->nodes[left_child].priority < heap->nodes[max].priority)){
 
             max = left_child;
         }
 
         if((right_child < heap->size) &&
-           (heap->nodes[right_child].priority > heap->nodes[max].priority)){
+           (heap->nodes[right_child].priority < heap->nodes[max].priority)){
             
             max = right_child;
         }
@@ -96,7 +96,7 @@ Heap *heap_construct(){
 }
 
 
-void heap_push(Heap *heap, void *data, double priority){
+void heap_push(Heap *heap, void *data, float priority){
 
     if(heap->size == heap->capacity){
 
@@ -122,12 +122,18 @@ int heap_empty(Heap *heap){
 }
 
 
+int heap_size(Heap *heap){
+
+    return heap->size;
+}
+
+
 void *heap_max(Heap *heap){
     return heap->nodes[0].data;
 }
 
 
-double heap_max_priority(Heap *heap){
+float heap_max_priority(Heap *heap){
     return heap->nodes[0].priority;
 }
 
@@ -152,6 +158,8 @@ void *heap_pop(Heap *heap){
 }
 
 
-void heap_sort(void *array, int array_size, int item_size, double (*key_fn)(void *)){
-    
+void heap_destroy(Heap *heap){
+
+    free(heap->nodes);
+    free(heap);
 }

@@ -1,4 +1,4 @@
-BFS
+UCS
 0 6
 9
 Vitoria 0 0 3 1 16 2 20 3 12
