@@ -30,16 +30,12 @@ int main(){
 
         busca_UCS(cidades, cidadeInicio, cidadeAlvo);
     }
+    else if(!strcmp(comando, "A*")){
+
+        busca_Astar(cidades, cidadeInicio, cidadeAlvo);
+    }
 
     vector_destroy(cidades);
 
     return 0;
 }
-
-
-/*
-    for(int i = 0; i < vector_size(cidades); i++){
-
-        printa_cidade(vector_get(cidades, i));
-    }
-*/

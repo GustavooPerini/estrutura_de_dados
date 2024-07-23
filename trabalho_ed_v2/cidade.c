@@ -16,6 +16,7 @@ struct cidade{
     int tagPai;
     float distPai;
     float custoOrigem;
+    char nomePai[50];
 };
 
 
@@ -37,6 +38,7 @@ Cidade *cidade_construct(){
     cidade->tagPai = -1;
     cidade->distPai = 0;
     cidade->custoOrigem = 0;
+    strcpy(cidade->nomePai, "");
 
     return cidade;
 }
@@ -47,13 +49,6 @@ void printa_cidade(void *data){
     if(data != NULL){
 
         Cidade *cidade = (Cidade*)data;
-
-        /*printf("%d %s %.2f %.2f %d", cidade->tag, cidade->nome, cidade->coordX, cidade->coordY, cidade->numVizinhos);
-
-        for(int i = 0; i < cidade->numVizinhos; i++){
-            printf(" %d %.2f", cidade->tagVizinhos[i], cidade->distVizinhos[i]);
-        }*/
-
         printf("%s\n", cidade->nome);
     }
 }
@@ -83,6 +78,7 @@ int get_tag_pai(Cidade *cidade){
     return cidade->tagPai;
 }
 
+
 float get_dist_pai(Cidade *cidade){
     return cidade->distPai;
 }
@@ -90,6 +86,21 @@ float get_dist_pai(Cidade *cidade){
 
 float get_custo_origem(Cidade *cidade){
     return cidade->custoOrigem;
+}
+
+
+float get_coordX(Cidade *cidade){
+    return cidade->coordX;
+}
+
+
+float get_coordY(Cidade *cidade){
+    return cidade->coordY;
+}
+
+
+char *get_nome(Cidade *cidade){
+    return cidade->nome;
 }
 
 
@@ -101,6 +112,7 @@ void set_distacia_pai(Cidade *cidade, float distPai){
 void set_tag_pai(Cidade *cidade, int tagPai){
     cidade->tagPai = tagPai;
 }
+
 
 void set_tag(Cidade *cidade, int tag){
     cidade->tag = tag;
@@ -121,6 +133,33 @@ int compara_cidade_tag(const void *a, const void *b){
         return 1;
     }
     return 0;
+}
+
+Cidade *cidade_copia(Cidade *cidade){
+
+    Cidade *copia = (Cidade*)malloc(sizeof(Cidade));
+
+    copia->tag = cidade->tag;
+    strcpy(copia->nome, cidade->nome);
+    copia->coordX = cidade->coordX;
+    copia->coordY = cidade->coordY;
+    copia->numVizinhos = cidade->numVizinhos;
+
+    copia->tagVizinhos = (int*)malloc(sizeof(int) * cidade->numVizinhos);
+    copia->distVizinhos = (float*)malloc(sizeof(float) * cidade->numVizinhos);
+
+    for(int i = 0; i < copia->numVizinhos ; i++){
+
+        copia->tagVizinhos[i] = cidade->tagVizinhos[i];
+        copia->distVizinhos[i] = cidade->distVizinhos[i];
+    }
+
+    copia->tagPai = cidade->tagPai;
+    copia->distPai = cidade->distPai;
+    copia->custoOrigem = cidade->custoOrigem;
+    strcpy(copia->nomePai, cidade->nomePai);
+
+    return copia;
 }
 
 

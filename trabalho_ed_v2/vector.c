@@ -71,7 +71,7 @@ int vector_find(Vector *v, data_type val, compare_func cmp){
 
     for(int i = 0; i < v->size; i++){
 
-       if(!cmp(val, vector_get(v, i))){
+       if(cmp(val, vector_get(v, i))){
             return i;
        }
 

@@ -16,4 +16,6 @@ void busca_Astar(Vector *cidades, int cidadeInicio, int cidadeAlvo);
 
 void printa_rota(Vector *visitados, Vector *cidades);
 
+float calcula_dist_heuristica(void *data1, void *data2);
+
 #endif
