@@ -45,10 +45,7 @@ void _heapify_up(Heap *heap, int idx){
         else{
             break;
         }
-
     }
-    
-
 }
 
 
@@ -79,7 +76,6 @@ void _heapify_down(Heap *heap, int idx){
         else{
             break;
         }
-
     }
 }
 

@@ -3,15 +3,6 @@
 #include <string.h>
 #include "busca.h"
 
-void printa_visitados(Vector *visitados){
-
-    printf("visitados:");
-    for(int i = 0; i < vector_size(visitados); i++){
-        printf(" %d", get_tag((Cidade*)vector_get(visitados, i)));
-    }
-    printf("\n");
-}
-
 void busca_DFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
 
     Vector *visitados = vector_construct(cidade_destroy);
@@ -83,12 +74,14 @@ void busca_DFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
         printf("IMPOSSIVEL\n");
     }
 
-    if(deque_size(fronteira) > 0){
-        int tam = deque_size(fronteira);
+    //verificando se ainda tem cidades na fronteira para desalocar
+    int tam = deque_size(fronteira);
+    if(tam > 0){
         for(int i = 0; i < tam; i++){
             cidade_destroy(deque_pop_front(fronteira));
         }
     }
+    
     deque_destroy(fronteira);
     vector_destroy(visitados);
 }
@@ -165,13 +158,14 @@ void busca_BFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
         printf("IMPOSSIVEL\n");
     }
 
-
-    if(deque_size(fronteira) > 0){
-        int tam = deque_size(fronteira);
+    //verificando se ainda tem cidades na fronteira para desalocar
+    int tam = deque_size(fronteira);
+    if(tam > 0){
         for(int i = 0; i < tam; i++){
             cidade_destroy(deque_pop_front(fronteira));
         }
     }
+
     deque_destroy(fronteira);
     vector_destroy(visitados);
 }
@@ -250,12 +244,14 @@ void busca_UCS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
         printf("IMPOSSIVEL\n");
     }
 
-    if(heap_size(fronteira) > 0){
-        int tam = heap_size(fronteira);
+    //verificando se ainda tem cidades na fronteira para desalocar
+    int tam = heap_size(fronteira);
+    if(tam > 0){
         for(int i = 0; i < tam; i++){
             cidade_destroy(heap_pop(fronteira));
         }
     }
+
     heap_destroy(fronteira);
     vector_destroy(visitados);
 }
@@ -336,12 +332,14 @@ void busca_Astar(Vector *cidades, int cidadeInicio, int cidadeAlvo){
         printf("IMPOSSIVEL\n");
     }
 
-    if(heap_size(fronteira) > 0){
-        int tam = heap_size(fronteira);
+    //verificando se ainda tem cidades na fronteira para desalocar
+    int tam = heap_size(fronteira);
+    if(tam > 0){
         for(int i = 0; i < tam; i++){
             cidade_destroy(heap_pop(fronteira));
         }
     }
+
     heap_destroy(fronteira);
     vector_destroy(visitados);
 }
@@ -360,8 +358,6 @@ void printa_rota(Vector *visitados, Vector *cidades){
         distTotal += get_dist_pai(cidadeAtual);
         tagCidade = get_tag_pai(cidadeAtual);
 
-        //tagCidade = vector_find(visitados, vector_get(cidades, get_tag_pai(cidadeAtual)), compara_cidade_tag);
-
         deque_push_back(rota, cidadeAtual);
 
         if(tagCidade < 0){
@@ -376,9 +372,6 @@ void printa_rota(Vector *visitados, Vector *cidades){
                 break;
             }
         }
-
-        //cidadeAtual = vector_get(cidades, tagCidade);
-        //cidadeAtual = vector_get(visitados, tagCidade);
     }
     
     int dequeSize = deque_size(rota);
@@ -391,7 +384,7 @@ void printa_rota(Vector *visitados, Vector *cidades){
     deque_destroy(rota);
 }
 
-
+//raiz quadrada sem utilizar a math.h
 float sqrt_newton(float num){
 
     float x = num;

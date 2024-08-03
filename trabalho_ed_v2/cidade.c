@@ -16,7 +16,6 @@ struct cidade{
     int tagPai;
     float distPai;
     float custoOrigem;
-    char nomePai[50];
 };
 
 
@@ -38,7 +37,6 @@ Cidade *cidade_construct(){
     cidade->tagPai = -1;
     cidade->distPai = 0;
     cidade->custoOrigem = 0;
-    strcpy(cidade->nomePai, "");
 
     return cidade;
 }
@@ -157,7 +155,6 @@ Cidade *cidade_copia(Cidade *cidade){
     copia->tagPai = cidade->tagPai;
     copia->distPai = cidade->distPai;
     copia->custoOrigem = cidade->custoOrigem;
-    strcpy(copia->nomePai, cidade->nomePai);
 
     return copia;
 }
