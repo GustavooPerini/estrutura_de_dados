@@ -19,11 +19,11 @@ struct cidade{
 };
 
 
-Cidade *cidade_construct(){
+Cidade *cidade_construct(FILE *fp){
 
     Cidade *cidade = (Cidade*)malloc(sizeof(Cidade));
 
-    scanf("%s %f %f %d", cidade->nome, &cidade->coordX, &cidade->coordY, &cidade->numVizinhos);
+    fscanf(fp, "%s %f %f %d", cidade->nome, &cidade->coordX, &cidade->coordY, &cidade->numVizinhos);
 
     cidade->tag = -1;
 
@@ -31,7 +31,7 @@ Cidade *cidade_construct(){
     cidade->distVizinhos = (float*)malloc(sizeof(float) * cidade->numVizinhos);
     
     for(int i = 0; i < cidade->numVizinhos ; i++){
-        scanf("%d %f", &cidade->tagVizinhos[i], &cidade->distVizinhos[i]);
+        fscanf(fp, "%d %f", &cidade->tagVizinhos[i], &cidade->distVizinhos[i]);
     }
 
     cidade->tagPai = -1;

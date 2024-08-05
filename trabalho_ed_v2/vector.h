@@ -1,11 +1,10 @@
 
-#ifndef _DATA_STRUCTURES_VECTOR_H_
-#define _DATA_STRUCTURES_VECTOR_H_
+#ifndef _VECTOR_H_
+#define _VECTOR_H_
 
 typedef void* data_type;
 
 typedef void (*delete_func)(void*);
-typedef int (*compare_func)(const void *, const void *);
 
 typedef struct Vector Vector;
 
@@ -20,9 +19,6 @@ data_type vector_get(Vector *v, int i);
 
 // Retorna o tamanho do vetor
 int vector_size(Vector *v);
-
-// Inverte o vetor in-place (sem criar um novo vetor)
-void vector_reverse(Vector *v);
 
 // Libera a memoria alocada para o vetor
 void vector_destroy(Vector *v);

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "busca.h"
 
 void busca_DFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
@@ -75,10 +76,9 @@ void busca_DFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
     }
 
     //verificando se ainda tem cidades na fronteira para desalocar
-    int tam = deque_size(fronteira);
-    if(tam > 0){
-        for(int i = 0; i < tam; i++){
-            cidade_destroy(deque_pop_front(fronteira));
+    if(deque_size(fronteira) > 0){
+        for(int i = 0; i < deque_size(fronteira); i++){
+            cidade_destroy(deque_get(fronteira, i));
         }
     }
     
@@ -159,10 +159,9 @@ void busca_BFS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
     }
 
     //verificando se ainda tem cidades na fronteira para desalocar
-    int tam = deque_size(fronteira);
-    if(tam > 0){
-        for(int i = 0; i < tam; i++){
-            cidade_destroy(deque_pop_front(fronteira));
+    if(deque_size(fronteira) > 0){
+        for(int i = 0; i < deque_size(fronteira); i++){
+            cidade_destroy(deque_get(fronteira, i));
         }
     }
 
@@ -245,10 +244,9 @@ void busca_UCS(Vector *cidades, int cidadeInicio, int cidadeAlvo){
     }
 
     //verificando se ainda tem cidades na fronteira para desalocar
-    int tam = heap_size(fronteira);
-    if(tam > 0){
-        for(int i = 0; i < tam; i++){
-            cidade_destroy(heap_pop(fronteira));
+    if(heap_size(fronteira) > 0){
+        for(int i = 0; i < heap_size(fronteira); i++){
+            cidade_destroy(heap_get(fronteira, i));
         }
     }
 
@@ -333,10 +331,9 @@ void busca_Astar(Vector *cidades, int cidadeInicio, int cidadeAlvo){
     }
 
     //verificando se ainda tem cidades na fronteira para desalocar
-    int tam = heap_size(fronteira);
-    if(tam > 0){
-        for(int i = 0; i < tam; i++){
-            cidade_destroy(heap_pop(fronteira));
+    if(heap_size(fronteira) > 0){
+        for(int i = 0; i < heap_size(fronteira); i++){
+            cidade_destroy(heap_get(fronteira, i));
         }
     }
 
@@ -384,26 +381,6 @@ void printa_rota(Vector *visitados, Vector *cidades){
     deque_destroy(rota);
 }
 
-//raiz quadrada sem utilizar a math.h
-float sqrt_newton(float num){
-
-    float x = num;
-    float y = 1.0;
-    float e = 0.000001; //precisão
-    int max_iter = 1000; // Limite máximo de iterações
-    int iter = 0;
-
-    while (x - y > e && iter < max_iter){
-
-        x = (x + y) / 2;
-        y = num / x;
-        iter++;
-    }
-
-    return x;
-}
-
-
 float calcula_dist_heuristica(void *data1, void *data2){
 
     Cidade *c1 = (Cidade*)data1;
@@ -414,5 +391,5 @@ float calcula_dist_heuristica(void *data1, void *data2){
 
     float distancia_quadrada = (dx * dx) + (dy * dy);
 
-    return sqrt_newton(distancia_quadrada);
+    return sqrt(distancia_quadrada);
 }

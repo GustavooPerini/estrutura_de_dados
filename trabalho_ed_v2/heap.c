@@ -154,6 +154,17 @@ void *heap_pop(Heap *heap){
 }
 
 
+void *heap_get(Heap *heap, int idx){
+
+    if(idx < 0 || idx >= heap->size){
+        return NULL;
+    }
+
+    return heap->nodes[idx].data;
+
+}
+
+
 void heap_destroy(Heap *heap){
 
     free(heap->nodes);

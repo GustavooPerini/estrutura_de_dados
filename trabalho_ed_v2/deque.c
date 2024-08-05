@@ -29,26 +29,27 @@ Deque *deque_construct(){
 }
 
 
+void deque_resize(Deque *f){
+
+    void **newData = (void**)malloc(sizeof(void*) * (f->allocated * DEQUE_GROWTH));
+
+    for(int i = 0; i < f->size; i++){
+        newData[i] = deque_get(f, i);
+    }
+    
+    free(f->data);
+
+    f->data = newData;
+    f->allocated *= DEQUE_GROWTH;
+    f->start = 0;
+    f->end = f->size;
+}
+
+
 void deque_push_back(Deque *f, void *item){
 
-    //verificar se ta cheio
-
     if(f->size == f->allocated){
-
-        int initial_size = f->size;
-        void **newData = (void**)malloc((sizeof(void*) * f->allocated) * DEQUE_GROWTH);
-
-        for(int i = 0; i < initial_size; i++){
-            newData[i] = deque_pop_front(f);
-        }
-
-        free(f->data);
-
-        f->allocated *= DEQUE_GROWTH;
-        f->size = initial_size;
-        f->data = newData;
-        f->start = 0;
-        f->end = f->size; 
+        deque_resize(f);
     }
 
     f->data[f->end] = item;
@@ -59,30 +60,15 @@ void deque_push_back(Deque *f, void *item){
 
 void deque_push_front(Deque *f, void *item){
 
-    //verificar se ta cheio
     if(f->size == f->allocated){
-
-        int initial_size = f->size;
-        void **newData = (void**)malloc((sizeof(void*) * f->allocated) * DEQUE_GROWTH);
-
-        for(int i = 0; i < initial_size; i++){
-            newData[i] = deque_pop_front(f);
-        }
-
-        free(f->data);
-
-        f->allocated *= DEQUE_GROWTH;
-        f->size = initial_size;
-        f->data = newData;
-        f->start = 0;
-        f->end = f->size;    
+        deque_resize(f);   
     }
 
     f->start = (f->start - 1);
     if(f->start < 0){
         f->start = f->allocated - 1;
     }
-
+    
     f->data[f->start] = item;
     f->size++;
 }
@@ -94,16 +80,14 @@ void *deque_pop_back(Deque *f){
         printf("Error: o vetor esta vazio\n");
         return NULL;
     }
-    else{
-        f->end = (f->end - 1);
-        if(f->end < 0){
-            f->end = f->allocated - 1;
-        }
-
-        f->size--;
-        return f->data[f->end];
+    
+    f->end = (f->end - 1);
+    if(f->end < 0){
+        f->end = f->allocated - 1;
     }
 
+    f->size--;
+    return f->data[f->end];
 }
 
 
@@ -113,18 +97,27 @@ void *deque_pop_front(Deque *f){
         printf("Error: o vetor esta vazio\n");
         return NULL;
     }
-    else{
-
-        void *data = f->data[f->start];
-        f->start = (f->start + 1) % f->allocated;
-        f->size--;
-        return data;
-    }
+    
+    void *data = f->data[f->start];
+    f->start = (f->start + 1) % f->allocated;
+    f->size--;
+    return data;
+    
 }
 
 
 int deque_size(Deque *f){
     return f->size;
+}
+
+
+void *deque_get(Deque *f, int idx){
+
+    if(idx < 0 || idx >= f->size){
+        return NULL;
+    }
+    
+    return f->data[(f->start + idx) % f->allocated];
 }
 
 

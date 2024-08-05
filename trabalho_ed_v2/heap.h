@@ -17,6 +17,8 @@ float heap_max_priority(Heap *heap);
 
 void *heap_pop(Heap *heap);
 
+void *heap_get(Heap *heap, int idx);
+
 void heap_destroy(Heap *heap);
 
 #endif

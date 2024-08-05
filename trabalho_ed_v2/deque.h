@@ -15,6 +15,8 @@ void *deque_pop_front(Deque *f);
 
 int deque_size(Deque *f);
 
+void *deque_get(Deque *f, int idx);
+
 void deque_destroy(Deque *f);
 
 #endif
