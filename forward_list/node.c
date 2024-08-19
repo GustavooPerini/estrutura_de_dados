@@ -26,6 +26,12 @@ data_type node_val(Node *node){
 }
 
 
+data_type *node_val_address(Node *node){
+
+    return &node->val;
+}
+
+
 Node *node_next(Node *node){
 
     return node->next;

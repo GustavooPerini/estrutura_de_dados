@@ -10,6 +10,8 @@ Node *node_construct(data_type val, Node *node);
 
 data_type node_val(Node *node);
 
+data_type *node_val_address(Node *node);
+
 Node *node_next(Node *node);
 
 void set_node_next(Node *node, Node *destiny);
