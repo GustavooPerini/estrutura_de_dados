@@ -104,6 +104,20 @@ data_type forward_list_pop_front(ForwardList *l){
 }
 
 
+Node *search_prev(ForwardList *l ,int index){
+    
+    Node *n = l->head;
+    Node *prev = NULL;
+
+    for(int i = 0; i < index; i++){
+       prev = n;
+       n = node_next(n); 
+    }
+    
+    return prev;
+}
+
+
 data_type forward_list_pop_index(ForwardList *l, int index){
 
     if(index < 0 || index >= l->size){
@@ -111,26 +125,22 @@ data_type forward_list_pop_index(ForwardList *l, int index){
         exit(0);
     }
 
-    Node *node = l->head;
-    Node *prev = NULL;
-
-    for(int i = 0; i < index; i++){
-        prev = node;
-        node = node_next(node);
-    }
+    Node *prev = search_prev(l, index);
+    Node *to_remove;
 
     if(prev == NULL){
-        l->head = node_next(node);
+        to_remove = l->head;
+        l->head = node_next(l->head);
     }
     else{
-        set_node_next(prev, node_next(node));
+        to_remove = node_next(prev);
+        set_node_next(prev, node_next(to_remove));
     }
 
-    data_type val = node_val(node);
-    node_destroy(node);
+    data_type val = node_val(to_remove);
+    node_destroy(to_remove);
     l->size--;
     return val;
-
 }
 
 
@@ -201,32 +211,28 @@ void forward_list_cat(ForwardList *l, ForwardList *m){
 
 
 void forward_list_sort(ForwardList *l){
-    
-    ListIterator *it = list_iterator_construct(l);
 
     for(int i = 0; i < l->size - 1; i++){
+
+        Node *n = l->head;
         int trocas = 0;
-        for(int j = 0; j < l->size - i - 1; j++){
 
-            data_type *value1 = list_iterator_next(it);
-            data_type *value2 = node_val_address(it->current);
+        for(int j = 0; j < l->size -i -1; j++){
 
-            if(*value1 > *value2){
-                
-                data_type swap = *value1;
-                *value1 = *value2;
-                *value2 = swap;
+            if(node_val(n) > node_val(node_next(n))){
+
+                data_type swap = node_val(n);
+                set_node_val(n, node_val(node_next(n)));
+                set_node_val(node_next(n), swap);
                 trocas++;
             }
-
+            n = node_next(n);
         }
+        
         if(trocas == 0){
             break;
         }
-        it->current = l->head;
     }
-
-    list_iterator_destroy(it);
 }
 
 

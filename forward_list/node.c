@@ -44,6 +44,11 @@ void set_node_next(Node *node, Node *destiny){
 }
 
 
+void set_node_val(Node *node, data_type value){
+    node->val = value;
+}
+
+
 void node_destroy(Node *node){
 
     free(node);

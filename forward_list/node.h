@@ -16,6 +16,8 @@ Node *node_next(Node *node);
 
 void set_node_next(Node *node, Node *destiny);
 
+void set_node_val(Node *node, data_type value);
+
 void node_destroy(Node *node);
 
 #endif
