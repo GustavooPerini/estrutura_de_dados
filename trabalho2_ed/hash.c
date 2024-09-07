@@ -4,11 +4,11 @@
 #include "hash.h"
 
 
-/*struct HashTableItem{
+struct HashTableItem{
 
     void *key;
     void *value;
-};*/
+};
 
 
 struct HashTable{

@@ -7,12 +7,12 @@
 int hash_str(HashTable *h, void *data){
 
     char *str = (char*)data;
-    unsigned long int hash_val = 0, base = 127;
+    unsigned long int hash_val = 0, base = 27183;
     unsigned long int random_val = 31415;
     int size = strlen(str);
 
     for(int i = 0; i < size; i++){
-        hash_val = (hash_val * base + str[i]) % hash_table_size(h);
+        hash_val = (hash_val * random_val + str[i]) % hash_table_size(h);
         random_val = (random_val * base) % (hash_table_size(h) - 1);
     }
 
@@ -29,9 +29,6 @@ int cmp_str(void *a, void *b){
 int main(){
 
     int n;
-
-    char palavras[4][100] = {"agua", "azul", "bola", "ceu"};
-    char textos[3][100] = {"a1.txt", "a2.txt", "a3.txt"};
 
     scanf("%d", &n);
 
@@ -89,32 +86,33 @@ int main(){
         }
     }
 
-    int size = hash_table_elements(h);
+    HashTableIterator *it1 = hash_table_iterator_construct(h);
 
-    for(int j = 0; j < size; j++){
+    printf("%d\n", hash_table_elements(h));
+    while(!hash_table_iterator_is_over(it1)){
 
-        void *a = hash_table_get(h, palavras[j]);
-        
-        for(int k = 0; k < 3; k++){
-            
-            
-            void *c = hash_table_get(a, textos[k]);
-            
-            if(c != NULL){
-                
-                int *r = (int *)c;
-                printf("%s: %s %d\n", palavras[j], textos[k], *r);
-            }
+        HashTableItem *item = hash_table_iterator_next(it1);
+        char *key = (char*)get_table_item_key(item);
+        void *value = get_table_item_value(item);
+
+        HashTableIterator *it2 = hash_table_iterator_construct(value);
+
+        printf("%s %d ", key, hash_table_elements(value));
+
+        while(!hash_table_iterator_is_over(it2)){
+
+            HashTableItem *item = hash_table_iterator_next(it2);
+            char *doc = (char*)get_table_item_key(item);
+            int *frequencia = (int*)get_table_item_value(item);
+
+            printf("%s %d ", doc, *frequencia);
         }
+        printf("\n");
+        hash_table_iterator_destroy(it2);
+        hash_table_destroy_itens(value);
     }
-
-    int sizet = hash_table_elements(h);
-    for(int j = 0; j < sizet; j++){
-
-        void *a = hash_table_get(h, palavras[j]);
-
-        hash_table_destroy_itens(a);
-    }
+    
+    hash_table_iterator_destroy(it1);
 
     hash_table_destroy(h);
     

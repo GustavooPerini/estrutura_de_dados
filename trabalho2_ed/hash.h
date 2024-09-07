@@ -1,13 +1,10 @@
 #ifndef _HASH_H_
 #define _HASH_H_
 
+
 typedef struct HashTable HashTable;
 
-typedef struct{
-
-    void *key;
-    void *value;
-}HashTableItem;
+typedef struct HashTableItem HashTableItem;
 
 typedef struct HashTableIterator HashTableIterator;
 

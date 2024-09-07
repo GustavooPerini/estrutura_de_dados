@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "forward_list.h"
 
-struct Node{
+typedef struct Node{
 
     data_type value;
-    Node *next;
-};
+    struct Node *next;
+}Node;
 
 
 struct ForwardList{

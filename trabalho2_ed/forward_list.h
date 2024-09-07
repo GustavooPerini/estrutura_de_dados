@@ -1,9 +1,8 @@
 #ifndef _FORWARD_LIST_H_
 #define _FORWARD_LIST_H_
 
-typedef void* data_type;
 
-typedef struct Node Node;
+typedef void* data_type;
 
 typedef struct ForwardList ForwardList;
 
