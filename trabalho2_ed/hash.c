@@ -4,11 +4,11 @@
 #include "hash.h"
 
 
-struct HashTableItem{
+/*struct HashTableItem{
 
     void *key;
     void *value;
-};
+};*/
 
 
 struct HashTable{
@@ -18,6 +18,15 @@ struct HashTable{
     void **buckets;
     int table_size;
     int elements;
+};
+
+
+struct HashTableIterator{
+
+    void **buckets;
+    int table_size;
+    int current;
+    ForwardListIterator *fl_it;
 };
 
 
@@ -91,7 +100,7 @@ void *hash_table_get(HashTable *h, void *key){
             HashTableItem *table_item = (HashTableItem*)forward_list_get(h->buckets[b_idx], i);
             
             if(h->cmp_func(key, table_item->key) == 0){
-
+                
                 return table_item->value;
             }
         }
@@ -103,28 +112,156 @@ void *hash_table_get(HashTable *h, void *key){
 }
 
 
+void *hash_table_pop(HashTable *h, void *key){
+
+    int b_idx = h->hash_func(h, key); // indice do bucket
+
+    if(h->buckets[b_idx] != NULL){
+
+        int fl_size = forward_list_size(h->buckets[b_idx]);
+
+        for(int i = 0; i < fl_size; i++){
+
+            HashTableItem *table_item = (HashTableItem*)forward_list_get(h->buckets[b_idx], i);
+
+            if(h->cmp_func(key, table_item->key) == 0){
+
+                void *val = table_item->value;
+                free(table_item->key);
+                forward_list_pop_index(h->buckets[b_idx], i);
+
+                return val;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+
 int hash_table_size(HashTable *h){
     return h->table_size;
 }
 
 
+int hash_table_elements(HashTable *h){
+    return h->elements;
+}
+
+
+void *get_table_item_key(HashTableItem *item){
+    return item->key;
+}
+
+
+void *get_table_item_value(HashTableItem *item){
+    return item->value;
+}
+
+
+void hash_table_destroy_itens(HashTable *h){
+
+    if(h != NULL){
+
+        for(int i = 0; i < h->table_size; i++){
+
+            if(h->buckets[i] != NULL){
+                
+                int fl_size = forward_list_size(h->buckets[i]);
+                for(int j = 0; j < fl_size; j++){
+
+                    HashTableItem *table_item = (HashTableItem*)forward_list_get(h->buckets[i], j);
+                    free(table_item->key);
+                    free(table_item->value);
+                }
+                forward_list_destroy(h->buckets[i]);
+            }
+        }
+
+        free(h->buckets);
+    }
+}
+
+
 void hash_table_destroy(HashTable *h){
 
-    for(int i = 0; i < h->table_size; i++){
+    hash_table_destroy_itens(h);
+    free(h);
+}
 
-        if(h->buckets[i] != NULL){
+
+//HASH TABLE ITERATOR FUNCTIONS
+
+int search_node(HashTableIterator *it){
+
+    while(it->buckets[it->current] == NULL){
             
-            int fl_size = forward_list_size(h->buckets[i]);
-            for(int j = 0; j < fl_size; j++){
-
-                HashTableItem *table_item = (HashTableItem*)forward_list_get(h->buckets[i], j);
-                free(table_item->key);
-                free(table_item->value);
-            }
-            forward_list_destroy(h->buckets[i]);
+        if(it->current == it->table_size - 1){
+            return 1;
         }
+        it->current++;
     }
 
-    free(h->buckets);
-    free(h);
+    return 0;
+}
+
+
+HashTableIterator *hash_table_iterator_construct(HashTable *h){
+
+    HashTableIterator *it = (HashTableIterator*)malloc(sizeof(HashTableIterator));
+
+    it->buckets = h->buckets;
+    it->table_size = h->table_size;
+    it->current = 0;
+
+    int search = search_node(it);
+    if(search == 1){
+        free(it);
+        return NULL;
+    }
+
+    it->fl_it = forward_list_iterator_construct(it->buckets[it->current]);
+
+    return it;
+}
+
+
+HashTableItem *hash_table_iterator_next(HashTableIterator *it){
+
+    if(it->fl_it == NULL){
+        
+        it->fl_it = forward_list_iterator_construct(it->buckets[it->current]);
+    }
+
+    HashTableItem *item = (HashTableItem*)forward_list_iterator_next(it->fl_it);
+    
+    return item;
+}
+
+
+int hash_table_iterator_is_over(HashTableIterator *it){
+
+    if(it->current == it->table_size - 1){
+    
+        if(forward_list_iterator_is_over(it->fl_it) == 1){
+            forward_list_iterator_destroy(it->fl_it);
+            return 1;
+        }
+        return 0;
+    }
+    else if(forward_list_iterator_is_over(it->fl_it) == 1){
+        
+        forward_list_iterator_destroy(it->fl_it);
+        it->fl_it = NULL;
+        it->current++;
+
+        return search_node(it);
+    }
+
+    return 0;
+}
+
+
+void hash_table_iterator_destroy(HashTableIterator *it){
+    free(it);
 }

@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "forward_list.h"
 
-typedef struct Node{
+struct Node{
 
     data_type value;
-    struct Node *next;
-}Node;
+    Node *next;
+};
 
 
 struct ForwardList{
@@ -17,7 +17,6 @@ struct ForwardList{
 
 
 struct ForwardListIterator{
-
     Node *current;
 };
 
@@ -71,6 +70,47 @@ data_type forward_list_get(ForwardList *l, int idx){
 }
 
 
+Node *search_prev(ForwardList *l ,int index){
+    
+    Node *n = l->head;
+    Node *prev = NULL;
+
+    for(int i = 0; i < index; i++){
+       prev = n;
+       n = n->next; 
+    }
+    
+    return prev;
+}
+
+
+data_type forward_list_pop_index(ForwardList *l, int index){
+
+    if(index < 0 || index >= l->size){
+        printf("Invalid index\n");
+        exit(0);
+    }
+
+    Node *prev = search_prev(l, index);
+    Node *to_remove;
+
+    if(prev == NULL){
+        to_remove = l->head;
+        l->head = l->head->next;
+    }
+    else{
+        to_remove = prev->next;
+        prev->next = to_remove->next;
+    }
+
+    data_type val = to_remove->value;
+    node_destroy(to_remove);
+    l->size--;
+    return val;
+}
+
+
+
 void forward_list_destroy(ForwardList *l){
 
     if(l->head != NULL){
@@ -104,4 +144,35 @@ void node_destroy(Node *node){
 
     free(node->value);
     free(node);
+}
+
+
+//Iterator functions
+
+ForwardListIterator *forward_list_iterator_construct(ForwardList *l){
+
+    ForwardListIterator *it = (ForwardListIterator*)malloc(sizeof(ForwardListIterator));
+    it->current = l->head;
+    return it;
+}
+
+
+data_type forward_list_iterator_next(ForwardListIterator *it){
+
+    data_type data = it->current->value;
+    it->current = it->current->next;
+    return data;
+}
+
+
+int forward_list_iterator_is_over(ForwardListIterator *it){
+
+    if(it->current == NULL){
+        return 1;
+    }
+    return 0;
+}
+
+void forward_list_iterator_destroy(ForwardListIterator *it){
+    free(it);
 }
