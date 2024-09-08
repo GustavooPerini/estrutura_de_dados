@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "forward_list.h"
 #include "hash.h"
 
 
@@ -45,7 +46,7 @@ int main(){
 
         for(int j = 0; j < words; j++){
 
-            HashTable *h2 = hash_table_construct(11, hash_str, cmp_str);
+            ForwardList *l = forward_list_contruct();
 
             char *word = (char*)malloc(sizeof(char)*100);
             char *document = (char*)malloc(sizeof(char)*100);
@@ -53,38 +54,51 @@ int main(){
             scanf("%s", word);
             int *frq = malloc(sizeof(int));
             *frq = 1;
-            
-            void *search = hash_table_get(h, word);
+
+            ForwardList *search = (ForwardList*)hash_table_get(h, word);
 
             if(search != NULL){
-        
-                void *val = hash_table_get(search, document);
                 
-                if(val != NULL){
-                    *frq += *(int *)val;
-                }
-                
-                void *b = hash_table_set(search, document, frq);
-                if(b != NULL){
+                ForwardListIterator *it = forward_list_iterator_construct(search);
+                int documento_novo = 0;
+
+                while(!forward_list_iterator_is_over(it)){
                     
-                    free(b);
-                    free(document);
+                    HashTableItem *pair = forward_list_iterator_next(it);
+                    void *key = get_table_item_key(pair);
+
+                    if(cmp_str(key, document) == 0){
+                        int *value = (int*)get_table_item_value(pair);
+                        *(value) = *(value) + 1;
+                        break;
+                    }
+                    else if(cmp_str(key, document) != 0){
+                        HashTableItem *item = hash_table_item_construct(document, frq);
+                        forward_list_push_front(search, item);
+                        documento_novo = 1;
+                        break;
+                    }
                 }
+                forward_list_iterator_destroy(it);
+                
+                if(documento_novo == 0){
+                    free(frq);
+                }
+
                 free(word);
-                hash_table_destroy(h2);
+                forward_list_destroy(l);
             }
             else{
-                
-                hash_table_set(h2, document, frq);
+
+                HashTableItem *item = hash_table_item_construct(document, frq);
+                forward_list_push_front(l, item);
             
-                void *a = hash_table_set(h, word, h2);
-                if(a != NULL){
-                    hash_table_destroy(a);
-                    free(word);
-                }
+                hash_table_set(h, word, l);
             }
         }
     }
+
+    //VER A DESALOCAÇÃO
 
     HashTableIterator *it1 = hash_table_iterator_construct(h);
 
@@ -94,22 +108,22 @@ int main(){
         HashTableItem *item = hash_table_iterator_next(it1);
         char *key = (char*)get_table_item_key(item);
         void *value = get_table_item_value(item);
+        
+        ForwardListIterator *it2 = forward_list_iterator_construct(value);
 
-        HashTableIterator *it2 = hash_table_iterator_construct(value);
+        printf("%s %d ", key, forward_list_size(value));
 
-        printf("%s %d ", key, hash_table_elements(value));
+        while(!forward_list_iterator_is_over(it2)){
 
-        while(!hash_table_iterator_is_over(it2)){
-
-            HashTableItem *item = hash_table_iterator_next(it2);
+            HashTableItem *item = forward_list_iterator_next(it2);
             char *doc = (char*)get_table_item_key(item);
             int *frequencia = (int*)get_table_item_value(item);
 
             printf("%s %d ", doc, *frequencia);
         }
         printf("\n");
-        hash_table_iterator_destroy(it2);
-        hash_table_destroy_itens(value);
+        forward_list_iterator_destroy(it2);
+        forward_list_destroy(value);
     }
     
     hash_table_iterator_destroy(it1);

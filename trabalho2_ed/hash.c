@@ -149,16 +149,6 @@ int hash_table_elements(HashTable *h){
 }
 
 
-void *get_table_item_key(HashTableItem *item){
-    return item->key;
-}
-
-
-void *get_table_item_value(HashTableItem *item){
-    return item->value;
-}
-
-
 void hash_table_destroy_itens(HashTable *h){
 
     if(h != NULL){
@@ -264,4 +254,26 @@ int hash_table_iterator_is_over(HashTableIterator *it){
 
 void hash_table_iterator_destroy(HashTableIterator *it){
     free(it);
+}
+
+
+//HASH TABLE ITEM FUNCTIONS
+
+HashTableItem *hash_table_item_construct(void *key, void *value){
+
+    HashTableItem *item = (HashTableItem*)malloc(sizeof(HashTableItem));
+
+    item->key = key;
+    item->value = value;
+    return item;
+}
+
+
+void *get_table_item_key(HashTableItem *item){
+    return item->key;
+}
+
+
+void *get_table_item_value(HashTableItem *item){
+    return item->value;
 }
