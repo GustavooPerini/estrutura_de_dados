@@ -277,3 +277,10 @@ void *get_table_item_key(HashTableItem *item){
 void *get_table_item_value(HashTableItem *item){
     return item->value;
 }
+
+
+void hash_table_item_destroy_elements(HashTableItem *item){
+    
+    free(item->key);
+    free(item->value);
+}

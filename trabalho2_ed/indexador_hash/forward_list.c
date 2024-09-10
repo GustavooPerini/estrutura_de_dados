@@ -127,6 +127,20 @@ void forward_list_destroy(ForwardList *l){
     free(l);
 }
 
+void forward_list_destroy_itens(ForwardList *l){
+
+    if(l->head != NULL){
+        
+        Node *n = l->head;
+        while(n != NULL){
+            
+            Node *to_remove = n;
+            n = n->next;
+            node_destroy(to_remove);
+        }
+    }
+}
+
 //Node functions
 
 Node *node_construct(data_type value, Node *next){

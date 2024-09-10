@@ -19,6 +19,8 @@ data_type forward_list_get(ForwardList *l, int idx);
 
 data_type forward_list_pop_index(ForwardList *l, int index);
 
+void forward_list_destroy_itens(ForwardList *l);
+
 void forward_list_destroy(ForwardList *l);
 
 ForwardListIterator *forward_list_iterator_construct(ForwardList *l);

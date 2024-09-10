@@ -26,8 +26,6 @@ int hash_table_elements(HashTable *h);
 
 void hash_table_destroy(HashTable *h);
 
-void hash_table_destroy_itens(HashTable *h);
-
 HashTableIterator *hash_table_iterator_construct(HashTable *h);
 
 HashTableItem *hash_table_iterator_next(HashTableIterator *it);
@@ -43,5 +41,7 @@ HashTableItem *hash_table_item_construct(void *key, void *value);
 void *get_table_item_key(HashTableItem *item);
 
 void *get_table_item_value(HashTableItem *item);
+
+void hash_table_item_destroy_elements(HashTableItem *item);
 
 #endif

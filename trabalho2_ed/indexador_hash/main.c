@@ -4,7 +4,6 @@
 #include "forward_list.h"
 #include "hash.h"
 
-
 int hash_str(HashTable *h, void *data){
 
     char *str = (char*)data;
@@ -83,6 +82,7 @@ int main(){
                 
                 if(documento_novo == 0){
                     free(frq);
+                    free(document);
                 }
 
                 free(word);
@@ -98,8 +98,6 @@ int main(){
         }
     }
 
-    //VER A DESALOCAÇÃO
-
     HashTableIterator *it1 = hash_table_iterator_construct(h);
 
     printf("%d\n", hash_table_elements(h));
@@ -111,7 +109,8 @@ int main(){
         
         ForwardListIterator *it2 = forward_list_iterator_construct(value);
 
-        printf("%s %d ", key, forward_list_size(value));
+        int fl_size = forward_list_size(value);
+        printf("%s %d ", key, fl_size);
 
         while(!forward_list_iterator_is_over(it2)){
 
@@ -123,7 +122,12 @@ int main(){
         }
         printf("\n");
         forward_list_iterator_destroy(it2);
-        forward_list_destroy(value);
+
+        for(int i = 0; i < fl_size; i++){
+            hash_table_item_destroy_elements(forward_list_get(value, i));
+        }
+
+        forward_list_destroy_itens(value);
     }
     
     hash_table_iterator_destroy(it1);
