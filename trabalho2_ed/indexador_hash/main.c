@@ -28,29 +28,34 @@ int cmp_str(void *a, void *b){
 
 int main(){
 
-    int n;
+    char file_name[300];
 
-    scanf("%d", &n);
+    scanf("%s%*c", file_name);
+
+    FILE *file = fopen(file_name, "r");
+
+    int n;
+    fscanf(file, "%d", &n);
 
     HashTable *h = hash_table_construct(11, hash_str, cmp_str);
 
     for(int i = 0; i < n; i++){
 
         char name[100];
-        int words = 0;
+        int num_words = 0;
 
-        scanf("%s ", name);
-        scanf("%d: ", &words);
+        fscanf(file, "%s ", name);
+        fscanf(file, "%d: ", &num_words);
         name[strlen(name) - 1] = '\0';
 
-        for(int j = 0; j < words; j++){
+        for(int j = 0; j < num_words; j++){
 
             ForwardList *l = forward_list_contruct();
 
             char *word = (char*)malloc(sizeof(char)*100);
             char *document = (char*)malloc(sizeof(char)*100);
             strcpy(document, name);
-            scanf("%s", word);
+            fscanf(file, "%s", word);
             int *frq = malloc(sizeof(int));
             *frq = 1;
 
@@ -97,6 +102,8 @@ int main(){
             }
         }
     }
+
+    fclose(file);
 
     HashTableIterator *it1 = hash_table_iterator_construct(h);
 
