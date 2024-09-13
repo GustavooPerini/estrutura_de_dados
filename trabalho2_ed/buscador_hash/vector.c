@@ -117,6 +117,14 @@ data_type vector_linear_search(Vector *v, data_type val, int(*cmp_func)(void *a,
 }
 
 
+void vector_sort(Vector *v, int(*cmp_func)(const void *a, const void *b)){
+
+    if(v->size > 1){
+        qsort(v->data, v->size, sizeof(data_type), cmp_func);
+    }
+}
+
+
 void vector_destroy(Vector *v){
 
     for(int i = 0; i < v->size; i++){

@@ -25,6 +25,8 @@ int vector_binary_search(Vector *v, data_type val, int(*cmp_func)(void *a, void 
 
 data_type vector_linear_search(Vector *v, data_type val, int(*cmp_func)(void *a, void *b));
 
+void vector_sort(Vector *v, int(*cmp_func)(const void *a, const void *b));
+
 void vector_destroy(Vector *v);
 
 #endif

@@ -27,6 +27,32 @@ int cmp_str(void *a, void *b){
 }
 
 
+int compara_documentos(const void *a, const void *b){
+
+    HashTableItem *p1 = *((HashTableItem**)a);
+    HashTableItem *p2 = *((HashTableItem**)b);
+
+    char *key1 = (char*)get_table_item_key(p1);
+    int *val1 = (int*)get_table_item_value(p1);
+
+    char *key2 = (char*)get_table_item_key(p2);
+    int *val2 = (int*)get_table_item_value(p2);
+    
+
+    if(*val1 > *val2) {
+        return -1;
+    }
+    else if(*val1 < *val2) {
+        return 1;
+    }
+    else{
+        // Se as frequencias forem iguais, comparar os nomes dos documentos em ordem alfabética
+        return strcmp(key1, key2);
+    }
+}
+
+
+
 int main(){
 
     char indice_path[100];
@@ -159,24 +185,13 @@ int main(){
 
         forward_list_destroy_itens(value);
     }
-    
     hash_table_iterator_destroy(it1);
-
-    hash_table_destroy(h);
-
-    vector_destroy(stop_words_vector);
-    fclose(indice_file);
-    fclose(stop_words_file);
     
+    //TRATAMENTO DO VETOR DE DOCUMENTOS
+    vector_sort(documents_frequency, compara_documentos);
 
-    for(int i = 0; i < forward_list_size(list_of_words); i++){
-        char *word = (char*)forward_list_get(list_of_words, i);
-        printf("%s\n", word);
-    }
-    
-    int size = vector_size(documents_frequency);
     int cont = 0;
-    for(int i = 0; i < size; i++){
+    for(int i = 0; i < vector_size(documents_frequency); i++){
 
         cont++;
         HashTableItem *item = vector_get(documents_frequency, i);
@@ -189,6 +204,13 @@ int main(){
 
         hash_table_item_destroy_elements(item);
     }
+
+    fclose(indice_file);
+    fclose(stop_words_file);
+
+    hash_table_destroy(h);
+
+    vector_destroy(stop_words_vector);
 
     forward_list_destroy(list_of_words);
     vector_destroy(documents_frequency);
