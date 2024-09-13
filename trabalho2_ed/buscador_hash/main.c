@@ -33,7 +33,7 @@ int main(){
     char stop_words_path[100];
     char search_word[50];
 
-    scanf("%s %s %[^\n]", indice_path, stop_words_path, search_word);
+    scanf("%s %s", indice_path, stop_words_path);
 
     FILE *indice_file = fopen(indice_path, "r");
     FILE *stop_words_file = fopen(stop_words_path, "r");
@@ -52,14 +52,14 @@ int main(){
 
     //CRIANDO UMA LISTA QUE SEPARA AS PALAVRAS COMPOSTAS EM PALAVRAS UNICAS
     ForwardList *list_of_words = forward_list_contruct();
-    char *pal;
-    pal = strtok(search_word, " ");
+    while(scanf("%s", search_word) > 0){
 
-    while(pal != NULL){
-        char *data_word = (char*)malloc(sizeof(char)*50);
-        strcpy(data_word, pal);
-        forward_list_push_front(list_of_words, data_word);
-        pal = strtok(NULL, " ");
+        if(vector_binary_search(stop_words_vector, search_word, cmp_str) == -1){
+
+            char *data_word = (char*)malloc(sizeof(char)*50);
+            strcpy(data_word, search_word);
+            forward_list_push_front(list_of_words, data_word);
+        }
     }
 
     //CRIANDO A HASH TABLE COM AS INFORMAÇÕES DO INDICE
@@ -106,37 +106,54 @@ int main(){
     //ITERADORES
     HashTableIterator *it1 = hash_table_iterator_construct(h);
 
-    printf("%d\n", hash_table_elements(h));
+    Vector *documents_frequency = vector_construct();
+
     while(!hash_table_iterator_is_over(it1)){
 
         HashTableItem *item = hash_table_iterator_next(it1);
         char *key = (char*)get_table_item_key(item);
         void *value = get_table_item_value(item);
-
-
-        //CODAR AQUI
-
-
-
-
         
-        ForwardListIterator *it2 = forward_list_iterator_construct(value);
 
-        int fl_size = forward_list_size(value);
-        printf("%s %d ", key, fl_size);
+        for(int i = 0; i < forward_list_size(list_of_words); i++){
+            
+            if(cmp_str(key, forward_list_get(list_of_words, i)) == 0){
 
-        while(!forward_list_iterator_is_over(it2)){
+                ForwardListIterator *it2 = forward_list_iterator_construct(value);
 
-            HashTableItem *item = forward_list_iterator_next(it2);
-            char *doc = (char*)get_table_item_key(item);
-            int *frequencia = (int*)get_table_item_value(item);
+                while(!forward_list_iterator_is_over(it2)){
 
-            printf("%s %d ", doc, *frequencia);
+                    HashTableItem *item = forward_list_iterator_next(it2);
+    
+                    int *frequencia = (int*)get_table_item_value(item);
+
+                    void *retorno = vector_linear_search(documents_frequency, item, cmp_hash_item_keys);
+
+                    if(retorno != NULL){
+                        
+                        HashTableItem *item_vetor = (HashTableItem*)retorno;
+                        int *frequencia_atual = (int*)get_table_item_value(item_vetor);
+                        *frequencia_atual += *frequencia;
+                    }
+                    else if(retorno == NULL){
+
+                        char *documento_vetor = (char*)malloc(sizeof(char)*50);
+                        int *frequencia_documento = (int*)malloc(sizeof(int));
+
+                        char *doc = (char*)get_table_item_key(item);
+
+                        strcpy(documento_vetor, doc);
+                        *frequencia_documento = *frequencia;
+
+                        HashTableItem *item_para_vetor = hash_table_item_construct(documento_vetor, frequencia_documento);
+                        vector_push_back(documents_frequency, item_para_vetor);
+                    }
+                }
+                forward_list_iterator_destroy(it2);
+            }
         }
-        printf("\n");
-        forward_list_iterator_destroy(it2);
 
-        for(int i = 0; i < fl_size; i++){
+        for(int i = 0; i < forward_list_size(value); i++){
             hash_table_item_destroy_elements(forward_list_get(value, i));
         }
 
@@ -156,8 +173,25 @@ int main(){
         char *word = (char*)forward_list_get(list_of_words, i);
         printf("%s\n", word);
     }
+    
+    int size = vector_size(documents_frequency);
+    int cont = 0;
+    for(int i = 0; i < size; i++){
+
+        cont++;
+        HashTableItem *item = vector_get(documents_frequency, i);
+        if(cont <= 10){
+
+            char *key = get_table_item_key(item);
+            int *val = get_table_item_value(item);
+            printf("%s %d\n", key, *val);
+        }
+
+        hash_table_item_destroy_elements(item);
+    }
 
     forward_list_destroy(list_of_words);
+    vector_destroy(documents_frequency);
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "string.h"
 #include "forward_list.h"
 #include "hash.h"
 
@@ -282,4 +283,16 @@ void hash_table_item_destroy_elements(HashTableItem *item){
     
     free(item->key);
     free(item->value);
+}
+
+
+int cmp_hash_item_keys(void *a, void *b){
+
+    HashTableItem *it1 = (HashTableItem*)a;
+    HashTableItem *it2 = (HashTableItem*)b;
+
+    char *key1 = (char*)it1->key;
+    char *key2 = (char*)it2->key;
+
+    return strcmp(key1, key2);
 }

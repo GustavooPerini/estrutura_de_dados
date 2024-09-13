@@ -42,6 +42,15 @@ int vector_size(Vector *v){
 }
 
 
+data_type vector_get(Vector *v, int i){
+
+    if(i < 0 || i >= v->size){
+        return NULL;
+    }
+    return v->data[i];
+}
+
+
 void *vector_remove(Vector *v, int i){
 
     if(i >= 0 && i < v->size){
@@ -55,7 +64,6 @@ void *vector_remove(Vector *v, int i){
         return data;
     }
     else{
-        printf("Indice invalido\n");
         return NULL;
     }
 
@@ -72,9 +80,47 @@ void *vector_pop_front(Vector *v){
 }
 
 
+int vector_binary_search(Vector *v, data_type val , int(*cmp_func)(void *a, void *b)){
+
+    int left = 0;
+    int right = v->size - 1;
+
+    while (left <= right){
+        
+        int mid = left + (right - left) / 2;
+        int search = cmp_func(val, v->data[mid]);
+
+        if(search == 0){
+            return mid;
+        }
+        else if(search > 0){
+            left = mid + 1;
+        }
+        else if(search < 0){
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+
+data_type vector_linear_search(Vector *v, data_type val, int(*cmp_func)(void *a, void *b)){
+
+    for(int i = 0; i < v->size; i++){
+
+        if(cmp_func(val, v->data[i]) == 0){
+            return v->data[i];
+        }
+    }
+    return NULL;
+}
+
+
 void vector_destroy(Vector *v){
 
     for(int i = 0; i < v->size; i++){
+        
         free(v->data[i]);
     }
     free(v->data);

@@ -44,4 +44,6 @@ void *get_table_item_value(HashTableItem *item);
 
 void hash_table_item_destroy_elements(HashTableItem *item);
 
+int cmp_hash_item_keys(void *a, void *b);
+
 #endif
