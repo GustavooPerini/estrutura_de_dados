@@ -1,0 +1,5 @@
+4
+azul 3 a3.txt 2 a2.txt 1 a1.txt 1 
+agua 2 a2.txt 1 a1.txt 3 
+bola 1 a2.txt 1 
+ceu 2 a3.txt 3 a2.txt 1 

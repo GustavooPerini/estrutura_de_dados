@@ -92,7 +92,7 @@ int main(){
     int indice_size = 0;
     fscanf(indice_file, "%d", &indice_size);
 
-    HashTable *h = hash_table_construct(11, hash_str, cmp_str);
+    HashTable *h = hash_table_construct(919, hash_str, cmp_str);
 
     for(int i = 0; i < indice_size; i++){
 

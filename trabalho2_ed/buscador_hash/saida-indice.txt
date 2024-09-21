@@ -1,5 +1,0 @@
-4
-agua 2 a1.txt 3 a2.txt 1
-bola 1 a2.txt 1
-ceu 2 a2.txt 1 a3.txt 3
-azul 3 a1.txt 1 a2.txt 1 a3.txt 2
