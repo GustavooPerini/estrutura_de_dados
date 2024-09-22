@@ -88,10 +88,10 @@ int main(){
     
     for(int i = 0; i < indice_size; i++){
 
-        char *name = (char*)malloc(sizeof(char)*100);
+        char word_name[100];
         int num_docs = 0;
 
-        fscanf(indice_file, "%s", name);
+        fscanf(indice_file, "%s", word_name);
         fscanf(indice_file, "%d", &num_docs);
 
         for(int j = 0; j < num_docs; j++){
@@ -99,28 +99,66 @@ int main(){
             ForwardList *l = forward_list_construct();
 
             char *document = (char*)malloc(sizeof(char)*100);
+            char *word = (char*)malloc(sizeof(char)*100);
+            strcpy(word, word_name);
+            fscanf(indice_file, "%s", document);
             int *frq = (int*)malloc(sizeof(int));
 
-            fscanf(indice_file, "%s", document);
             fscanf(indice_file, "%d", frq);
 
-            ForwardList *search = (ForwardList*)binary_tree_get(bt, name);
+            ForwardList *search = (ForwardList*)binary_tree_get(bt, document);
 
             if(search != NULL){
                 
-                KeyValPair *kvp = key_val_pair_construct(document, frq);
+                KeyValPair *kvp = key_val_pair_construct(word, frq);
                 forward_list_push_front(search, kvp);
                 forward_list_destroy(l);
+                free(document);
             }
             else{
 
-                KeyValPair *kvp = key_val_pair_construct(document, frq);
+                KeyValPair *kvp = key_val_pair_construct(word, frq);
                 forward_list_push_front(l, kvp);
-                binary_tree_add(bt, name, l);
+                binary_tree_add(bt, document, l);
             }
         }
     }
+
+
+    Vector *inorder_traversal = binary_tree_inorder_traversal_recursive(bt);
+
+    printf("%d\n", binary_tree_size(bt));
+    for(int i = 0; i < vector_size(inorder_traversal); i++){
+
+        KeyValPair *kvp = vector_get(inorder_traversal, i);
+        char *key = (char*)get_key_val_pair_key(kvp);
+        ForwardList *fl = (ForwardList*)get_key_val_pair_val(kvp);
+
+        ForwardListIterator *it = forward_list_iterator_construct(fl);
+
+        int fl_size = forward_list_size(fl);
+        printf("%s %d ", key, fl_size);
+
+        while(!forward_list_iterator_is_over(it)){
+
+            KeyValPair *kvp = forward_list_iterator_next(it);
+            char *doc = (char*)get_key_val_pair_key(kvp);
+            int *frequencia = (int*)get_key_val_pair_val(kvp);
+
+            printf("%s %d ", doc, *frequencia);
+            free(doc);
+            free(frequencia);
+        }
+        printf("\n");
+        forward_list_iterator_destroy(it);
+
+        forward_list_destroy_itens(fl);
+        key_val_pair_destroy(kvp);
+    }
+    vector_destroy(inorder_traversal);
+
     
+    /*
     //Iteradores e saida
     Vector *inorder_traversal = binary_tree_inorder_traversal_recursive(bt);
 
@@ -203,7 +241,7 @@ int main(){
         free(key);
         free(val);
         key_val_pair_destroy(kvp);
-    }
+    }*/
 
 
     fclose(indice_file);
@@ -215,7 +253,7 @@ int main(){
         free(vector_pop_front(stop_words_vector));
     }
     vector_destroy(stop_words_vector);
-    vector_destroy(documents_frequency);
+    //vector_destroy(documents_frequency);
 
     binary_tree_destroy(bt);
 

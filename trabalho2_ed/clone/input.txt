@@ -1,0 +1,3 @@
+inf_01.txt
+stop_words.txt
+desktop ou notebook e melhor para assistir musicas e videos e trabalho em ambiente corporativo
