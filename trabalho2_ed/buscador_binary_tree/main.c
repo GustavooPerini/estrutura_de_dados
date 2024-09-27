@@ -88,10 +88,10 @@ int main(){
     
     for(int i = 0; i < indice_size; i++){
 
-        char *name = (char*)malloc(sizeof(char)*100);
+        char word_name[100];
         int num_docs = 0;
 
-        fscanf(indice_file, "%s", name);
+        fscanf(indice_file, "%s", word_name);
         fscanf(indice_file, "%d", &num_docs);
 
         for(int j = 0; j < num_docs; j++){
@@ -99,31 +99,34 @@ int main(){
             ForwardList *l = forward_list_construct();
 
             char *document = (char*)malloc(sizeof(char)*100);
+            char *word = (char*)malloc(sizeof(char)*100);
+            strcpy(word, word_name);
+            fscanf(indice_file, "%s", document);
             int *frq = (int*)malloc(sizeof(int));
 
-            fscanf(indice_file, "%s", document);
             fscanf(indice_file, "%d", frq);
 
-            ForwardList *search = (ForwardList*)binary_tree_get(bt, name);
+            ForwardList *search = (ForwardList*)binary_tree_get(bt, document);
 
             if(search != NULL){
                 
-                KeyValPair *kvp = key_val_pair_construct(document, frq);
+                KeyValPair *kvp = key_val_pair_construct(word, frq);
                 forward_list_push_front(search, kvp);
                 forward_list_destroy(l);
+                free(document);
             }
             else{
 
-                KeyValPair *kvp = key_val_pair_construct(document, frq);
+                KeyValPair *kvp = key_val_pair_construct(word, frq);
                 forward_list_push_front(l, kvp);
-                binary_tree_add(bt, name, l);
+                binary_tree_add(bt, document, l);
             }
         }
     }
-    
+
+
     //Iteradores e saida
     Vector *inorder_traversal = binary_tree_inorder_traversal_recursive(bt);
-
     Vector *documents_frequency = vector_construct();
 
     for(int i = 0; i < vector_size(inorder_traversal); i++){
@@ -131,60 +134,44 @@ int main(){
         KeyValPair *kvp = vector_get(inorder_traversal, i);
         char *key = (char*)get_key_val_pair_key(kvp);
         ForwardList *fl = (ForwardList*)get_key_val_pair_val(kvp);
-        
-        for(int i = 0; i < forward_list_size(list_of_words); i++){
 
-            if(cmp_str(key, forward_list_get(list_of_words, i)) == 0){
+        int *frequencia_busca = (int*)malloc(sizeof(int));
+        *frequencia_busca = 0;
+        int achou_alguma_palavra = 0;
 
-                ForwardListIterator *it = forward_list_iterator_construct(fl);
+        ForwardListIterator *it = forward_list_iterator_construct(fl);
 
-                while(!forward_list_iterator_is_over(it)){
-                    
-                    KeyValPair *kvp = (KeyValPair*)forward_list_iterator_next(it);
-                    int *frequencia = (int*)get_key_val_pair_val(kvp);
+        while(!forward_list_iterator_is_over(it)){
 
-                    //essa linha abaixo verifica se o par chave valor que foi retirado da forward list
-                    //ja esta no vetor de frequencia dos documentos
-                    void *retorno = vector_linear_search(documents_frequency, kvp, cmp_kvp_keys);
+            KeyValPair *kvp = forward_list_iterator_next(it);
+            char *word = (char*)get_key_val_pair_key(kvp);
+            int *frequencia = (int*)get_key_val_pair_val(kvp);
 
-                    if(retorno != NULL){
-                        //nesse caso, ja temos um documento no vetor, então basta aumentar sua frequencia
-                        KeyValPair *kvp = (KeyValPair*)retorno;
-                        int *frequencia_atual = (int*)get_key_val_pair_val(kvp);
-                        *frequencia_atual += *frequencia;
-                    }
-                    else if(retorno == NULL){
-                        
-                        //aqui o vetor de frequencia nao possui o documento, logo devemos adicionar um novo
+            for(int i = 0; i < forward_list_size(list_of_words); i++){
 
-                        char *documento_vetor = (char*)malloc(sizeof(char)*50);
-                        int *frequencia_documento = (int*)malloc(sizeof(int));
-
-                        //pego o nome do documento a ser inserido no vetor
-                        char *doc = (char*)get_key_val_pair_key(kvp);
-
-                        strcpy(documento_vetor, doc);
-                        *frequencia_documento = *frequencia;
-
-                        KeyValPair *kvp_para_vetor = key_val_pair_construct(documento_vetor, frequencia_documento);
-                        vector_push_back(documents_frequency, kvp_para_vetor);
-                    }
+                if(cmp_str(word, forward_list_get(list_of_words, i)) == 0){
+                    achou_alguma_palavra = 1;
+                    *frequencia_busca += *frequencia;
                 }
-                forward_list_iterator_destroy(it);
             }
+
+            free(word);
+            free(frequencia);
+        }
+        forward_list_iterator_destroy(it);
+
+        if(achou_alguma_palavra != 0){
+            KeyValPair *pair = key_val_pair_construct(key, frequencia_busca);
+            vector_push_back(documents_frequency, pair);
+        }
+        else{
+            free(frequencia_busca);
         }
 
-        for(int i = 0; i < forward_list_size(fl); i++){
-            KeyValPair *kvp = forward_list_get(fl, i);
-            free(get_key_val_pair_key(kvp));
-            free(get_key_val_pair_val(kvp));
-        }
-
-        free(kvp);
         forward_list_destroy_itens(fl);
+        key_val_pair_destroy(kvp);
     }
     vector_destroy(inorder_traversal);
-
 
     //TRATAMENTO DO VETOR DE DOCUMENTOS
     vector_sort(documents_frequency, compara_documentos);
@@ -200,7 +187,6 @@ int main(){
 
             printf("%s %d\n", key, *val);
         }
-        free(key);
         free(val);
         key_val_pair_destroy(kvp);
     }
